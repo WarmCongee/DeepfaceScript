@@ -1,6 +1,6 @@
 from deepface import DeepFace
 import json
-
+import cv2
 
 class JsonStringOperations:
     @staticmethod
