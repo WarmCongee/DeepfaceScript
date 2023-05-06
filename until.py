@@ -12,6 +12,15 @@ class JsonStringOperations:
             print(json.dumps(result, indent=4, sort_keys=True))
 
     @staticmethod
+    def emotion_result_extractor(result):
+        parsed = result
+        if isinstance(result, str):
+            parsed = json.loads(result)
+        print(parsed[0]["dominant_emotion"])
+        print(parsed[0]["emotion"])
+        return parsed[0]["dominant_emotion"], parsed[0]["emotion"]
+
+    @staticmethod
     def get_json_target_value(dic_json, target_key):
         # dic = {}
         if isinstance(dic_json, str):

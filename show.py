@@ -10,31 +10,46 @@ import analyze_pic
 class PicAnalyzeUI(QDialog, analyze_pic.Ui_Dialog):
     def __init__(self):
         super(PicAnalyzeUI, self).__init__()
+        self.image_path = ''
         self.setupUi(self)
         self.reset()
 
     def reset(self):
         self.toolButton.clicked.connect(self.image_file)
+        self.pushButton.clicked.connect(self.image_analyze)
+
 
     def image_file(self):
-        directory = QtWidgets.QFileDialog.getOpenFileName(self, "选取文件", "./", "All Files (*);;Text Files (*.txt)")
+        directory = QtWidgets.QFileDialog.getOpenFileName(self, "选取文件", "/home", "All Files (*);;Text Files (*.txt)")
+        self.image_path = directory[0]
         pixmap = QPixmap(directory[0])
         self.label.setPixmap(pixmap)
         self.label.setScaledContents(True)
-        result = Analyze.analyze_emotion(directory)
-        JsonStringOperations.print_formatted_result(result)
 
-def choose_pic():
-    test_url = QPixmap("face-whiteman.png")
-    dialog.label.setPixmap(test_url)
-    dialog.label.setScaledContents(True)
+    def image_analyze(self):
+        result = Analyze.analyze_emotion(self.image_path)
+        main_emotion, emotions = JsonStringOperations.emotion_result_extractor(result)
+        self.angryNumber.setDigitCount(4)
+        self.angryNumber.display(emotions["angry"])
 
-def reset_ui(dialog):
-    dialog.label.linkActivated.connect(choose_pic)
+        self.disgustNumber.setDigitCount(4)
+        self.disgustNumber.display(emotions["disgust"])
 
+        self.fearNumber.setDigitCount(4)
+        self.fearNumber.display(emotions["fear"])
 
-    dialog.label.setPixmap(test_url)
-    dialog.label.setScaledContents(True)
+        self.happyNumber.setDigitCount(4)
+        self.happyNumber.display(emotions["happy"])
+
+        self.neutralNumber.setDigitCount(4)
+        self.neutralNumber.display(emotions["neutral"])
+
+        self.sadNumber.setDigitCount(4)
+        self.sadNumber.display(emotions["sad"])
+
+        self.surpriseNumber.setDigitCount(4)
+        self.surpriseNumber.display(emotions["surprise"])
+
 
 
 
