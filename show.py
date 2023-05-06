@@ -2,6 +2,7 @@ import sys
 
 from until import *
 from PyQt6 import QtWidgets
+from PyQt6 import QtCore
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtWidgets import QDialog, QApplication
 
@@ -23,41 +24,24 @@ class PicAnalyzeUI(QDialog, analyze_pic.Ui_Dialog):
         directory = QtWidgets.QFileDialog.getOpenFileName(self, "选取文件", "/home", "All Files (*);;Text Files (*.txt)")
         self.image_path = directory[0]
         pixmap = QPixmap(directory[0])
+        pixmap = pixmap.scaled(self.label.size(), QtCore.Qt.AspectRatioMode.KeepAspectRatio)
         self.label.setPixmap(pixmap)
         self.label.setScaledContents(True)
 
     def image_analyze(self):
         result = Analyze.analyze_emotion(self.image_path)
         main_emotion, emotions = JsonStringOperations.emotion_result_extractor(result)
-        self.angryNumber.setDigitCount(4)
-        self.angryNumber.display(emotions["angry"])
-
-        self.disgustNumber.setDigitCount(4)
-        self.disgustNumber.display(emotions["disgust"])
-
-        self.fearNumber.setDigitCount(4)
-        self.fearNumber.display(emotions["fear"])
-
-        self.happyNumber.setDigitCount(4)
-        self.happyNumber.display(emotions["happy"])
-
-        self.neutralNumber.setDigitCount(4)
-        self.neutralNumber.display(emotions["neutral"])
-
-        self.sadNumber.setDigitCount(4)
-        self.sadNumber.display(emotions["sad"])
-
-        self.surpriseNumber.setDigitCount(4)
-        self.surpriseNumber.display(emotions["surprise"])
-
-
-
-
+        self.progressBar.setValue(emotions["angry"])
+        self.progressBar_2.setValue(emotions["disgust"])
+        self.progressBar_3.setValue(emotions["fear"])
+        self.progressBar_4.setValue(emotions["happy"])
+        self.progressBar_5.setValue(emotions["neutral"])
+        self.progressBar_6.setValue(emotions["sad"])
+        self.progressBar_7.setValue(emotions["surprise"])
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     my_win = PicAnalyzeUI()
-    # reset_ui(my_win)
 
     my_win.show()
     sys.exit(app.exec())
